@@ -1,0 +1,220 @@
+<template>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Data Pegajuan Cuti Kadis</h4>
+
+      <div class="card-pegawai">
+        <div class="search__container">
+          <input class="search__input" type="text" placeholder="Nama/unit kerja" v-model="searchQuery" @input="search">
+          <i class="fa fa-search search__icon"></i>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Nama</th>
+              <th>Unit Kerja</th>
+              <th>Tanggal Awal</th>
+              <th>Tanggal Akhir</th>
+              <th>Alasan</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(cuti, index) in data_cuti" :key="index">
+              <td>{{ index + 1 }}</td>
+              <td>{{ getNamaPegawai(cuti.user_id) }}</td>
+              <td><template v-if="getUnitKerja(cuti.user_id).split(' ').length > 3">
+                  {{ getUnitKerja(cuti.user_id).split(' ').slice(0, 3).join(' ') }}<br><br>
+                  {{ getUnitKerja(cuti.user_id).split(' ').slice(3).join(' ') }}
+                </template>
+                <template v-else>
+                  {{ getUnitKerja(cuti.user_id) }}
+                </template>
+              </td>
+              <td>{{ cuti.tgl_awal }}</td>
+              <td>{{ cuti.tgl_akhir }}</td>
+              <td>{{ cuti.alasan }}</td>
+              <td v-if="cuti.status == 'ACC Sekretaris'" class="btn-action">
+                <button @click="validasi(cuti.id)" class="btn btn-warning btn-sm">ACC</button>
+                <button @click="validasiTolak(cuti.id)" class="btn btn-danger btn-sm">Tolak</button>
+              </td>
+              <td v-else-if="cuti.status == 'ACC Kadis'">
+                Sudah disetujui
+              </td>
+              <td v-else-if="cuti.status == 'Selesai'">
+                Sudah disetujui
+              </td>
+              <td v-else-if="cuti.status == 'Ditolak Kadis'">
+                Ditolak
+              </td>
+              <td v-else>
+                Sudah disetujui
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+export default {
+  data() {
+    return {
+      data_cuti: [],
+      data_pegawai: [],
+      data_pengguna: [],
+      searchQuery: ""
+    }
+  },
+  mounted() {
+    this.getDataPengajuanCuti();
+    this.getDataPegawai();
+    this.getDataPengguna();
+  },
+  methods: {
+    search() {
+      if (this.searchQuery !== "") {
+        const accessToken = localStorage.getItem('token');
+        axios.get(`http://127.0.0.1:8000/api/pengajuan_cuti/search/${this.searchQuery}`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          })
+          .then(res => {
+            console.log(res.data.data);
+            this.data_cuti = res.data.data.filter(cuti => cuti.status === "ACC Sekretaris" || cuti.status === "Selesai" || cuti.status === "Ditolak Kadis");
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+      } else {
+        this.getDataPengajuanCuti();
+      }
+    },
+    getDataPengajuanCuti() {
+      const accessToken = localStorage.getItem('token');
+      axios.get('http://127.0.0.1:8000/api/pengajuan_cuti_acc_kadis',  {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }).then(res => {
+        console.log(res.data.data);
+        this.data_cuti = res.data.data;
+      }).catch(error => {
+        console.error('Error fetching data:', error);
+      });
+    },
+    getDataPegawai() {
+      const accessToken = localStorage.getItem('token');
+      axios.get('http://127.0.0.1:8000/api/pegawai_all', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }, {
+      }).then(res => {
+        console.log(res.data.data);
+        this.data_pegawai = res.data.data;
+      }).catch(error => {
+        console.error('Error fetching pegawai data:', error);
+      });
+    },
+    getDataPengguna() {
+      const accessToken = localStorage.getItem('token');
+      axios.get('http://127.0.0.1:8000/api/users', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+        .then(res => {
+          console.log(res.data.data);
+          this.data_pengguna = res.data.data;
+        })
+        .catch(error => {
+          console.error('Error fetching pegawai data:', error);
+        });
+    },
+    getIdPegawai(userId) {
+      const user = this.data_pengguna.find(pengguna => pengguna.id === userId);
+      return user ? user.pegawai_id : 'Id Pegawai Tidak Tersedia';
+    },
+    getNamaPegawai(userId) {
+      const idPengguna = this.getIdPegawai(userId);
+      const namaPegawai = this.data_pegawai.find(pegawai => pegawai.id === idPengguna);
+      return namaPegawai ? namaPegawai.nama : 'Nama Pegawai Tidak Tersedia';
+    },
+    getUnitKerja(userId) {
+      const idPegawai = this.getIdPegawai(userId);
+      const namaPegawai = this.data_pegawai.find(pegawai => pegawai.id === idPegawai);
+      return namaPegawai ? namaPegawai.unit_kerja : 'Unit Kerja Pegawai Tidak Tersedia';
+    },
+    async validasi(cutiId) {
+      try {
+        const result = await Swal.fire({
+          title: 'Apakah Anda yakin akan menyetujui pengajuan cuti?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya, setuju!'
+        });
+
+        if (result.isConfirmed) {
+          if (!this.rememberMe) {
+            const accessToken = localStorage.getItem('token');
+            await axios.put(`http://127.0.0.1:8000/api/pengajuan_cuti_acc_kadis/${cutiId}`, null, {
+              headers: {
+                'Authorization': `Bearer ${accessToken}`
+              }
+            });
+            Swal.fire(
+              'Berhasil!',
+              'Pengajuan cuti berhasil disetujui.',
+              'success',
+              this.getDataPengajuanCuti()
+            );
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async validasiTolak(cutiId) {
+      try {
+        const result = await Swal.fire({
+          title: 'Apakah Anda yakin akan menolak pengajuan cuti?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya, tolak!'
+        });
+
+        if (result.isConfirmed) {
+          if (!this.rememberMe) {
+            const accessToken = localStorage.getItem('token');
+            await axios.put(`http://127.0.0.1:8000/api/pengajuan_cuti_tolak_kadis/${cutiId}`, null, {
+              headers: {
+                'Authorization': `Bearer ${accessToken}`
+              }
+            });
+            Swal.fire(
+              'Berhasil!',
+              'Pengajuan cuti berhasil ditolak.',
+              'success',
+              this.getDataPengajuanCuti()
+            );
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  }
+}
+</script>
