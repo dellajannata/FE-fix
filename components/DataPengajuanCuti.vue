@@ -7,7 +7,7 @@
           <input class="search__input" type="text" placeholder="Nama/unit kerja" v-model="searchQuery" @input="search">
           <i class="fa fa-search search__icon"></i>
         </div>
-        <a class="btn btn-primary" href="/create_pengajuan_cuti_pegawai"><i class="fa fa-plus"></i></a>
+        <NuxtLink class="btn btn-primary" to="/create_pengajuan_cuti_pegawai"><i class="fa fa-plus"></i></NuxtLink>
       </div>
       <div class="table-responsive">
         <table class="table table-hover">
@@ -54,8 +54,10 @@
                 </template>
               </td>
               <td class="btn-action">
-                <template v-if="cuti.status != 'Selesai' && cuti.status != 'Ditolak Kabid' && cuti.status != 'Ditolak Kasubag Umum' && cuti.status != 'Ditolak Sekretaris' && cuti.status != 'Ditolak Kadis'">
-                  <NuxtLink :to="`../editCuti_${cuti.id}`" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></NuxtLink>
+                <template
+                  v-if="cuti.status != 'Selesai' && cuti.status != 'Ditolak Kabid' && cuti.status != 'Ditolak Kasubag Umum' && cuti.status != 'Ditolak Sekretaris' && cuti.status != 'Ditolak Kadis'">
+                  <NuxtLink :to="`../editCuti_${cuti.id}`" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i>
+                  </NuxtLink>
                 </template>
                 <button @click="deleteCuti(cuti.id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
               </td>
@@ -96,10 +98,10 @@ export default {
       if (this.searchQuery !== "") {
         const accessToken = localStorage.getItem('token');
         axios.get(`http://127.0.0.1:8000/api/pengajuan_cuti/search/${this.searchQuery}`, {
-            headers: {
-              'Authorization': `Bearer ${accessToken}`
-            }
-          })
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        })
           .then(res => {
             console.log(res.data.data);
             this.data_cuti = res.data.data;
@@ -118,10 +120,10 @@ export default {
     getDataPengajuanCuti() {
       const accessToken = localStorage.getItem('token');
       axios.get('http://127.0.0.1:8000/api/pengajuan_cuti_all', {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        })
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
         .then(res => {
           console.log(res.data.data);
           this.data_cuti = res.data.data;
@@ -133,13 +135,13 @@ export default {
     getDataPegawai() {
       const accessToken = localStorage.getItem('token');
       axios.get('http://127.0.0.1:8000/api/pegawai_all', {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        }).then(res => {
-          console.log(res.data.data);
-          this.data_pegawai = res.data.data;
-        })
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }).then(res => {
+        console.log(res.data.data);
+        this.data_pegawai = res.data.data;
+      })
         .catch(error => {
           console.error('Error fetching pegawai data:', error);
         });
@@ -153,12 +155,12 @@ export default {
       return userData ? userData.pegawai_id : ''; // Mengambil id user dari objek pengguna 
     },
     getNamaPegawai() {
-      const user = this.getPegawaiId(); 
+      const user = this.getPegawaiId();
       const pegawai = this.data_pegawai.find(pegawai => pegawai.id === user);
       return pegawai ? pegawai.nama : 'Nama Pegawai Tidak Tersedia';
     },
     getUnitKerja() {
-      const user = this.getPegawaiId(); 
+      const user = this.getPegawaiId();
       const pegawai = this.data_pegawai.find(pegawai => pegawai.id === user);
       return pegawai ? pegawai.unit_kerja : 'Unit Kerja Pegawai Tidak Tersedia';
     },
@@ -229,7 +231,7 @@ export default {
         const link = document.createElement('a');
         link.href = url;
         link.target = '_blank';
-        link.download = 'surat-permohonan-cuti.pdf'; 
+        link.download = 'surat-permohonan-cuti.pdf';
         link.click();
 
         window.URL.revokeObjectURL(url);

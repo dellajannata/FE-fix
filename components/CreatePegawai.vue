@@ -36,7 +36,7 @@
                             <span class="text-danger">{{ this.errorList.alamat }}</span>
                         </div>
                         <div class="form-group">
-                            <label for="unit_kerja">Unit Kreja</label>
+                            <label for="unit_kerja">Unit Kerja</label>
                             <input type="text" v-model="data_pegawai.unit_kerja" class="form-control" id="unit_kerja"
                                 placeholder="Masukkan Unit Kerja Anda">
                             <span class="text-danger">{{ this.errorList.unit_kerja }}</span>
@@ -103,7 +103,7 @@ export default {
                         const accessToken = localStorage.getItem('token');
                         const response = await axios.post('http://127.0.0.1:8000/api/pegawai', requestData, {
                             headers: {
-                            'Authorization': `Bearer ${accessToken}`
+                                'Authorization': `Bearer ${accessToken}`
                             }
                         });
 
