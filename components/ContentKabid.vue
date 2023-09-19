@@ -8,7 +8,7 @@
             <div class="d-inline-block">
               <h2>{{ cuti_kabid.length }}</h2>
               <p class="text-white">Ayeee ayee</p>
-              <a href="/pengajuan_cuti_acc_kabid" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
+              <NuxtLink to="/pengajuan_cuti_acc_kabid" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></NuxtLink>
             </div>
             <span class="float-right display-5 opacity-5"><i class="mdi mdi-animation"></i></span>
           </div>
@@ -23,7 +23,7 @@
             <div class="d-inline-block">
               <h2>{{ rekap_cuti.length }}</h2>
               <p class="text-white">Uhuyeeyee</p>
-              <a href="/pengajuan_cuti_acc_kabid" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
+              <NuxtLink to="/pengajuan_cuti_acc_kabid" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></NuxtLink>
             </div>
             <span class="float-right display-5 opacity-5"><i class="mdi mdi-animation"></i></span>
           </div>

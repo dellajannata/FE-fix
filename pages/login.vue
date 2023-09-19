@@ -54,11 +54,11 @@ const form = ref({
 
 const REDIRECT_ROUTES = {
 	ADMIN: '/dashboard',
-    KABID: '/dashboard_kabid',
-    KASUBAG: '/dashboard_kasubag',
-    KADIS: '/dashboard_kadis',
-    SEKRETARIS: '/dashboard_sekretaris',
-    PEGAWAI: '/dashboard_pegawai'
+	KABID: '/dashboard_kabid',
+	KASUBAG: '/dashboard_kasubag',
+	KADIS: '/dashboard_kadis',
+	SEKRETARIS: '/dashboard_sekretaris',
+	PEGAWAI: '/dashboard_pegawai'
 }
 
 const onLogin = async () => {
