@@ -28,7 +28,7 @@ const mobileNavControl = () => {
 }
 const getSidebarPage = computed(() => {
   const path = useRoute().path
-  const id = useRoute().params.id 
+  const id = useRoute().params.id
   console.log(path, id)
   switch (path) {
     // Pegawai
@@ -70,7 +70,7 @@ const getSidebarPage = computed(() => {
       return resolveComponent('SidebarAccKasubag')
     case '/editPenggunaKasubag_:id': // belum solve
       return resolveComponent('SidebarAccKasubag')
-    
+
     // Sekretaris
     case '/dashboard_sekretaris':
       return resolveComponent('SidebarSekretaris')
@@ -106,11 +106,17 @@ const getSidebarPage = computed(() => {
   height: calc(100vh - 60px);
   background-color: #fff;
   position: absolute;
-  z-index: 2000;
+  z-index: 1400;
   top: 60px;
   right: 0px;
   width: 70%;
   overflow-y: auto;
   box-shadow: -5px -1px 15px #2e2e2e;
+}
+
+@media (min-width: 991px) {
+  .mobile-nav {
+    display: none;
+  }
 }
 </style>
