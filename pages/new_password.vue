@@ -4,29 +4,12 @@
       <div class="wrap-login100">
         <form class="login100-form validate-form" @submit.prevent="onLogin()">
           <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
-            <span class="label-input100">E-mail</span>
-            <input class="input100" v-model="form.email" type="email" name="email" placeholder="Enter Email" />
+            <span class="label-input100">Enter Your New Password</span>
+            <input class="input100" v-model="form.password" type="password" name="password" placeholder="Enter Your New Password" />
             <span class="focus-input100"></span>
           </div>
-
-          <div class="wrap-input100 validate-input m-b-18" data-validate="Password is required">
-            <span class="label-input100">Password</span>
-            <input class="input100" type="password" v-model="form.password" name="password" placeholder="Enter password" />
-            <span class="focus-input100"></span>
-          </div>
-
-          <div class="w-full flex-sb-m p-b-30">
-            <div class="contact100-form-checkbox">
-              <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
-              <label class="label-checkbox100" for="ckb1">Remember me</label>
-            </div>
-            <div>
-              <NuxtLink to="/forgot_password" class="txt1">Forgot Password?</NuxtLink>
-            </div>
-          </div>
-
           <div class="container-login100-form-btn">
-            <button class="login100-form-btn" type="submit">Login</button>
+            <button class="login100-form-btn" type="submit">Reset Password</button>
           </div>
         </form>
       </div>
@@ -48,7 +31,6 @@ const appConfig = useAppConfig();
 const error = ref(""); // Changed to a single error message
 
 const form = ref({
-  email: "",
   password: "",
 });
 
