@@ -21,7 +21,7 @@
               <label class="label-checkbox100" for="ckb1">Remember me</label>
             </div>
             <div>
-              <NuxtLink to="/forgot_password" class="txt1">Forgot Password?</NuxtLink>
+              <NuxtLink to="/forgot-password" class="txt1">Forgot Password?</NuxtLink>
             </div>
           </div>
 
